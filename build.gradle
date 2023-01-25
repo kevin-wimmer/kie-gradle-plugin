@@ -1,0 +1,47 @@
+plugins {
+	id 'java-gradle-plugin'
+	id 'maven-publish'
+	id 'com.gradle.plugin-publish' version '1.1.0'
+}
+
+def droolsVersion = '7.73.0.Final'
+
+group = 'io.github.kevin-wimmer'
+version = "${droolsVersion}"
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation "org.drools:drools-compiler:${droolsVersion}"
+
+	runtimeOnly "org.drools:drools-mvel:${droolsVersion}"
+	runtimeOnly "org.drools:drools-serialization-protobuf:${droolsVersion}"
+
+	testImplementation 'org.junit.jupiter:junit-jupiter:5.9.2'
+}
+
+gradlePlugin {
+	website = 'https://github.com/kevin-wimmer/kie-gradle-plugin'
+	vcsUrl = 'https://github.com/kevin-wimmer/kie-gradle-plugin.git'
+	plugins {
+		kjar {
+			id = 'io.github.kevin-wimmer.kjar'
+			displayName = 'Kie Gradle Plugin'
+			description = 'A Gradle plugin for building Kie JARs'
+			implementationClass = 'io.github.kevinwimmer.gradle.plugins.KjarPlugin'
+			tags.set(['drools', 'kie'])
+		}
+	}
+}
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(8)
+	}
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
