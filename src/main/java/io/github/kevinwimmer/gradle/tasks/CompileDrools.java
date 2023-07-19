@@ -46,7 +46,6 @@ import org.gradle.api.Project;
 import org.gradle.api.UncheckedIOException;
 import org.gradle.api.plugins.JavaPluginExtension;
 import org.gradle.api.tasks.TaskAction;
-import org.gradle.work.DisableCachingByDefault;
 import org.kie.api.KieServices;
 import org.kie.api.builder.Message;
 
@@ -63,7 +62,6 @@ import io.github.kevinwimmer.maven.pom.ProjectPomModel;
  *
  * @author Kevin Wimmer
  */
-@DisableCachingByDefault(because = "Not worth caching")
 public class CompileDrools extends DefaultTask {
 
     @TaskAction
