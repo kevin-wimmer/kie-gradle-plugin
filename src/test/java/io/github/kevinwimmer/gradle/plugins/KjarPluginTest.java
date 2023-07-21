@@ -79,7 +79,7 @@ class KjarPluginTest {
         writeString(getSettingsFile(), "rootProject.name = 'kjar-plugin-test'");
         writeString(getBuildFile(),
                 "plugins {\r\n" +
-                "  id 'io.github.kevin-wimmer.kjar' version '7.73.0.Final'\r\n" +
+                "  id 'io.github.kevin-wimmer.kjar' version '7.74.1.Final'\r\n" +
                 "}\r\n" +
                 "group = 'io.github.kevinwimmer.test'\r\n" +
                 "version = '1.0.0'\r\n" +
@@ -87,7 +87,7 @@ class KjarPluginTest {
                 "  mavenCentral()\r\n" +
                 "}\r\n" +
                 "dependencies {\r\n" +
-                "  implementation 'org.drools:drools-core:7.73.0.Final'\r\n" +
+                "  implementation 'org.drools:drools-core:7.74.1.Final'\r\n" +
                 "  implementation 'com.google.guava:guava:31.1-jre'\r\n" +
                 "}");
         writeString(getDrlFile(),
