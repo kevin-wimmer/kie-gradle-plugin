@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Kevin Wimmer
+ * Copyright 2023-2024 Kevin Wimmer
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
 
 package io.github.kevinwimmer.kie.resources;
 
-import static org.drools.core.util.IoUtils.readBytesFromInputStream;
+import static org.drools.util.IoUtils.readBytesFromInputStream;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -23,6 +23,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 
+import org.drools.util.PortablePath;
 import org.gradle.api.UncheckedIOException;
 import org.kie.memorycompiler.resources.ResourceStore;
 
@@ -35,13 +36,13 @@ public class DiskResourceStore implements ResourceStore {
     }
 
     @Override
-    public void write(String pResourceName, byte[] pResourceData) {
-        write(pResourceName, pResourceData, false);
+    public void write(PortablePath resourcePath, byte[] resourceData) {
+        write(resourcePath, resourceData, false);
     }
 
     @Override
-    public void write(String pResourceName, byte[] pResourceData, boolean createFolder) {
-        File file = new File(getFilePath(pResourceName));
+    public void write(PortablePath resourcePath, byte[] resourceData, boolean createFolder) {
+        File file = new File(getFilePath(resourcePath.asString()));
         if (createFolder) {
             File dir = file.getParentFile();
             if (!dir.exists()) {
@@ -50,15 +51,15 @@ public class DiskResourceStore implements ResourceStore {
         }
 
         try (FileOutputStream fos = new FileOutputStream(file)) {
-            fos.write(pResourceData);
+            fos.write(resourceData);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
     }
 
     @Override
-    public byte[] read(String pResourceName) {
-        try (FileInputStream fis = new FileInputStream(getFilePath(pResourceName))) {
+    public byte[] read(PortablePath resourcePath) {
+        try (FileInputStream fis = new FileInputStream(getFilePath(resourcePath.asString()))) {
             return readBytesFromInputStream(fis);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
@@ -66,15 +67,15 @@ public class DiskResourceStore implements ResourceStore {
     }
 
     @Override
-    public void remove(String pResourceName) {
+    public void remove(PortablePath resourcePath) {
         try {
-            Files.deleteIfExists(new File(getFilePath(pResourceName)).toPath());
+            Files.deleteIfExists(new File(getFilePath(resourcePath.asString())).toPath());
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
     }
 
-    private String getFilePath(String pResourceName) {
-        return root.getAbsolutePath() + File.separator + pResourceName;
+    private String getFilePath(String resourceName) {
+        return root.getAbsolutePath() + File.separator + resourceName;
     }
 }

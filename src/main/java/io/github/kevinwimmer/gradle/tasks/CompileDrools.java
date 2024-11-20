@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Kevin Wimmer
+ * Copyright 2023-2024 Kevin Wimmer
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,7 +44,10 @@ import org.gradle.api.DefaultTask;
 import org.gradle.api.GradleException;
 import org.gradle.api.Project;
 import org.gradle.api.UncheckedIOException;
+import org.gradle.api.plugins.JavaPlugin;
 import org.gradle.api.plugins.JavaPluginExtension;
+import org.gradle.api.tasks.InputDirectory;
+import org.gradle.api.tasks.OutputFile;
 import org.gradle.api.tasks.TaskAction;
 import org.kie.api.KieServices;
 import org.kie.api.builder.Message;
@@ -64,21 +67,37 @@ import io.github.kevinwimmer.maven.pom.ProjectPomModel;
  */
 public class CompileDrools extends DefaultTask {
 
+    @InputDirectory
+    public File getInputDirectory() {
+        return getProject()
+                .getExtensions()
+                .getByType(JavaPluginExtension.class)
+                .getSourceSets()
+                .getByName(MAIN_SOURCE_SET_NAME)
+                .getResources()
+                .getSrcDirs()
+                .iterator()
+                .next();
+    }
+
+    @OutputFile
+    public File getOutputFile() {
+        return getProject()
+                .getTasksByName(JavaPlugin.JAR_TASK_NAME, false)
+                .iterator()
+                .next()
+                .getOutputs()
+                .getFiles()
+                .getSingleFile();
+    }
+
     @TaskAction
     public void compileDrools() {
         Project project = getProject();
         ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
         Thread.currentThread().setContextClassLoader(createClassLoader(project));
         try {
-            File sourceDir = project
-                    .getExtensions()
-                    .getByType(JavaPluginExtension.class)
-                    .getSourceSets()
-                    .getByName(MAIN_SOURCE_SET_NAME)
-                    .getResources()
-                    .getSrcDirs()
-                    .iterator()
-                    .next();
+            File sourceDir = getInputDirectory();
             File outputDir = project
                     .getExtensions()
                     .getByType(JavaPluginExtension.class)
@@ -152,7 +171,7 @@ public class CompileDrools extends DefaultTask {
 
     private void saveFile(MemoryFileSystem mfs, String fileName, File outputDir) {
         MemoryFile memFile = (MemoryFile) mfs.getFile(fileName);
-        final Path path = Paths.get(outputDir.getPath(), memFile.getPath().toPortableString());
+        final Path path = Paths.get(outputDir.getPath(), memFile.getPath().asString());
         try {
             Files.deleteIfExists(path);
             Files.createDirectories(path);
