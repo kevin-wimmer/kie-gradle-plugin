@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Kevin Wimmer
+ * Copyright 2023-2024 Kevin Wimmer
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -77,37 +77,37 @@ class KjarPluginTest {
 
     private void createProjectFiles() throws IOException {
         writeString(getSettingsFile(), "rootProject.name = 'kjar-plugin-test'");
-        writeString(getBuildFile(),
-                "plugins {\r\n" +
-                "  id 'io.github.kevin-wimmer.kjar' version '7.74.1.Final'\r\n" +
-                "}\r\n" +
-                "group = 'io.github.kevinwimmer.test'\r\n" +
-                "version = '1.0.0'\r\n" +
-                "repositories {\r\n" +
-                "  mavenCentral()\r\n" +
-                "}\r\n" +
-                "dependencies {\r\n" +
-                "  implementation 'org.drools:drools-core:7.74.1.Final'\r\n" +
-                "  implementation 'com.google.guava:guava:31.1-jre'\r\n" +
-                "}");
-        writeString(getDrlFile(),
-                "package io.github.kevinwimmer.test;\r\n" +
-                "import java.net.InetAddress;\r\n" +
-                "import java.time.DayOfWeek;\r\n" +
-                "import java.time.LocalDate;\r\n" +
-                "import com.google.common.net.InetAddresses;\r\n" +
-                "rule \"Is it Friday?\"\r\n" +
-                "when\r\n" +
-                "  LocalDate(dayOfWeek == DayOfWeek.FRIDAY)\r\n" +
-                "then\r\n" +
-                "  System.out.println(\"Today is Friday!\");\r\n" +
-                "end\r\n" +
-                "rule \"What's My IP Address?\"\r\n" +
-                "when\r\n" +
-                "  $inetAddress : InetAddress()\r\n" +
-                "then\r\n" +
-                "  System.out.println(\"My IP address is: \" + InetAddresses.toAddrString($inetAddress));\r\n" +
-                "end\r\n");
+        writeString(getBuildFile(), """
+                plugins {
+                  id 'io.github.kevin-wimmer.kjar' version '%1$s'
+                }
+                group = 'io.github.kevinwimmer.test'
+                version = '1.0.0'
+                repositories {
+                  mavenCentral()
+                }
+                dependencies {
+                  implementation 'org.drools:drools-core:%1$s'
+                  implementation 'com.google.guava:guava:31.1-jre'
+                }""".formatted("8.44.2.Final"));
+        writeString(getDrlFile(), """
+                package io.github.kevinwimmer.rules;
+                import java.net.InetAddress;
+                import java.time.DayOfWeek;
+                import java.time.LocalDate;
+                import com.google.common.net.InetAddresses;
+                rule "Is it Friday?"
+                when
+                  LocalDate(dayOfWeek == DayOfWeek.FRIDAY)
+                then
+                  System.out.println("Today is Friday!");
+                end
+                rule "What's My IP Address?"
+                when
+                  $inetAddress : InetAddress()
+                then
+                  System.out.println("My IP address is: " + InetAddresses.toAddrString($inetAddress));
+                end""");
     }
 
     private void writeString(File file, String string) throws IOException {

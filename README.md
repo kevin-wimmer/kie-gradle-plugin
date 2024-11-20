@@ -6,7 +6,7 @@ Using the plugins DSL:
 
 ```gradle
 plugins {
-  id 'io.github.kevin-wimmer.kjar' version '7.73.0.Final'
+  id 'io.github.kevin-wimmer.kjar' version '8.44.2.Final'
 }
 ```
 
@@ -20,7 +20,7 @@ buildscript {
     }
   }
   dependencies {
-    classpath 'io.github.kevin-wimmer:kie-gradle-plugin:7.73.0.Final'
+    classpath 'io.github.kevin-wimmer:kie-gradle-plugin:8.44.2.Final'
   }
 }
 
@@ -35,11 +35,11 @@ reside under the `src/main/resources` directory.
 
 ## Drools Compatibility
 This plugin is versioned in such a manner as to match the version of Drools with which it is known
-to be compatible (i.e. version 7.73.0.Final is compatible with Drools 7.73.0.Final). And while a
+to be compatible (i.e. version 8.44.2.Final is compatible with Drools 8.44.2.Final). And while a
 given version of this plugin may work with other Drools releases, such compatibility is not guaranteed.
 
 ## License
 Licensed under the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)
 
 ## Copyright
-Copyright (c) 2023 Kevin Wimmer
+Copyright (c) 2023-2024 Kevin Wimmer
